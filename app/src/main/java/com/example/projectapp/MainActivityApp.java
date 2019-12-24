@@ -12,15 +12,14 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 public class MainActivityApp extends AppCompatActivity {
 
     // information about user in the moment when he calls emergency
     private UserFormular userFormular;
     private UserProfile userProfile;
 
-    // emergencyStatus is status of the user, if nothing is happening, it will be 0,
-    // if user has called emergency it will be 1, and if the problem is resolved and the user
-    // could see a drone it is 2.
+    // emergencyStatus is status of the user, everything is explained in the class Constants
     private int emergencyStatus;
 
     @Override
@@ -28,7 +27,7 @@ public class MainActivityApp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
 
-        emergencyStatus=0;
+        emergencyStatus=Constants.STATE_FINE;
         userProfile=new UserProfile(1);
 
         TextView UserNameText= (TextView) findViewById(R.id.UserNameText);
@@ -36,47 +35,50 @@ public class MainActivityApp extends AppCompatActivity {
 
         //title of the action bar
         setTitle(Html.fromHtml("<font color='#FFFFFF'>Home </font>"));
+
         final ImageButton button= (ImageButton) findViewById(R.id.button_emergency);
         final Switch switch_button=(Switch) findViewById(R.id.switch_emergency_done);
         final ProgressBar progess=(ProgressBar) findViewById(R.id.progress_drone);
         progess.setVisibility(View.INVISIBLE);
         switch_button.setVisibility(View.INVISIBLE);
         final TextView progress_info= (TextView) findViewById(R.id.progress_info);
-        progress_info.setText("Press a button to ask for help");
+        progress_info.setText(R.string.state_fine_msg);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 switch (emergencyStatus){
-                    case 0:
+                    case Constants.STATE_FINE:
                         button.setImageResource(R.drawable.button_pressed);
-                        emergencyStatus=1;
+                        emergencyStatus=Constants.STATE_EMERGENCY;
                         switch_button.setVisibility(View.VISIBLE);
                         progess.setVisibility(View.VISIBLE);
-                        progress_info.setText("Request sent, help is on the way");
+                        progress_info.setText(R.string.state_emergency_msg);
                         progress_info.setVisibility(View.VISIBLE);
                         break;
-                    case 1:
+                    case Constants.STATE_EMERGENCY:
                         button.setImageResource(R.drawable.button_default);
                         switch_button.setVisibility(View.INVISIBLE);
                         progess.setVisibility(View.INVISIBLE);
-                        progress_info.setText("Press a button to ask for help");
+                        progress_info.setText(R.string.state_fine_msg);
                         switch_button.setChecked(false);
-                        emergencyStatus=0;
+                        emergencyStatus=Constants.STATE_FINE;
                         break;
                 }
             }
         });
+
         switch_button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (emergencyStatus==1 && switch_button.isChecked()){
-                    emergencyStatus=2;
+                if (emergencyStatus==Constants.STATE_EMERGENCY && switch_button.isChecked()){
+                    emergencyStatus=Constants.STATE_PATIENT_OBSERVED;
                     button.setImageResource(R.drawable.button_disabled);
-                    progress_info.setText("Glad that we could help!");
+                    progress_info.setText(R.string.state_patient_observed_msg);
                     progess.setVisibility(View.INVISIBLE);
                 }
-                if (emergencyStatus==2 && (!switch_button.isChecked())){
+                if (emergencyStatus==Constants.STATE_PATIENT_OBSERVED && (!switch_button.isChecked())){
                     button.setImageResource(R.drawable.button_default);
                     progess.setVisibility(View.INVISIBLE);
-                    emergencyStatus=0;
+                    emergencyStatus=Constants.STATE_FINE;
                 }
             }
         });

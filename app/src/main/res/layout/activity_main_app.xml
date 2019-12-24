@@ -38,7 +38,7 @@
         android:id="@+id/switch_emergency_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Service done"
+        android:text="Drone seen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.528"
