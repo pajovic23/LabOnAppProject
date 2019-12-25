@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         Login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                database.getReference().setValue("Hello, World!");
                 final String usernameInput = ((EditText) findViewById(R.id.text_username))
                         .getText().toString();
                 final String passwordInput = ((EditText) findViewById(R.id.text_password))
@@ -47,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                                     .getValue(String.class);
                             if (usernameInput.equals(usernameDatabase)
                                     && passwordInput.equals(passwordDatabase)) {
-                                userProfile=new UserProfile(Integer.parseInt(user.getKey()));
+                                userProfile=new UserProfile(user.getKey());
                                 userProfile.setUserName(usernameDatabase);
                                 notMember = false;
                                 break;
@@ -71,6 +70,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+        Button Register_button=(Button) findViewById(R.id.button_register);
+        Register_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

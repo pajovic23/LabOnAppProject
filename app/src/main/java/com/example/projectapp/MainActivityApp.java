@@ -28,7 +28,7 @@ public class MainActivityApp extends AppCompatActivity {
         setContentView(R.layout.activity_main_app);
 
         emergencyStatus=Constants.STATE_FINE;
-        userProfile=new UserProfile(1);
+        userProfile=new UserProfile("1");
 
         TextView UserNameText= (TextView) findViewById(R.id.UserNameText);
         UserNameText.setText(userProfile.getUserName());

@@ -4,4 +4,5 @@
     <string name="state_emergency_msg">Request sent, help is on the way</string>
     <string name="state_patient_observed_msg">Glad that we could help!</string>
     <string name="user_authentication_error">User not registered, please register</string>
+    <string name="register_welcome_msg">Please register your username and password</string>
 </resources>

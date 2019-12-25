@@ -3,11 +3,21 @@ package com.example.projectapp;
 public class UserProfile {
     //User Name it could be edited
     private String userName;
-    private int userID;
-    public UserProfile(int UserID){
+    private String userID;
+    private String userPassword;
+
+
+    public UserProfile(String UserID){
         userID=UserID;
         // when creating new user, it will have the name as his ID
-        userName=new Integer(UserID).toString();
+        userName=userID;
+    }
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
     }
 
     public String getUserName() {
@@ -18,7 +28,7 @@ public class UserProfile {
         this.userName = userName;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 }
