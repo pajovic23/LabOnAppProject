@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">ProjectApp</string>
     <string name="state_fine_msg">Press a button to ask for help</string>
-    <string name="state_emergency_msg">Request sent, help is on the way</string>
+    <string name="state_emergency_msg">Request sent, waiting for response...</string>
+    <string name="state_patient_acknowledged">Request acknowledged, help is on the way!</string>
     <string name="state_patient_observed_msg">Glad that we could help!</string>
     <string name="user_authentication_error">User not registered, please register</string>
     <string name="register_welcome_msg">Please register your username and password</string>

@@ -116,14 +116,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp
 "
-                android:text="Able to walk"
+                android:text="Unable to walk"
                 android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/check_button_speak"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="Able to speak"
+                android:text="Unable to speak"
                 android:textStyle="bold" />
         </LinearLayout>
     </FrameLayout>

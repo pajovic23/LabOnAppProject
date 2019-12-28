@@ -5,6 +5,7 @@ public class UserProfile {
     private String userName;
     private String userID;
     private String userPassword;
+    private UserFormular mUserFormular;
 
 
     public UserProfile(String UserID){
@@ -31,4 +32,13 @@ public class UserProfile {
     public String getUserID() {
         return userID;
     }
+
+    public UserFormular getmUserFormular() {
+        return mUserFormular;
+    }
+
+    public void setmUserFormular(UserFormular mUserFormular) {
+        this.mUserFormular = mUserFormular;
+    }
+
 }
