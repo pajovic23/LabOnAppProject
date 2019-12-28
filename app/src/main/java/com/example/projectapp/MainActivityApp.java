@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -19,6 +20,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivityApp extends AppCompatActivity {
@@ -35,14 +43,17 @@ public class MainActivityApp extends AppCompatActivity {
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference profileRef = database.getReference("profiles");
     final DatabaseReference requestRef = database.getReference("requests");
-    boolean requestSent=false;
-    boolean requestStatusChanged=false;
+    private boolean requestSent=false;
+    private boolean requestStatusChanged=false;
     private String requestID;
 
     private ImageButton button;
     private Switch switch_button;
     private ProgressBar progess;
     private TextView progress_info;
+    private FusedLocationProviderClient fusedLocationClient;
+    private double GPS_logitude;
+    private double GPS_latitude;
 
     // emergencyStatus is status of the user, everything is explained in the class Constants
     private int emergencyStatus;
@@ -53,6 +64,18 @@ public class MainActivityApp extends AppCompatActivity {
             switch (emergencyStatus){
                 case Constants.STATE_FINE:
                     StateFineLayout();
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(MainActivityApp.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        // Logic to handle location object
+                                        GPS_latitude=location.getLatitude();
+                                        GPS_logitude=location.getLongitude();
+                                    }
+                                }
+                            });
                     if(requestSent){
                         requestSent=false;
                         emergencyStatus=Constants.STATE_EMERGENCY;
@@ -71,6 +94,7 @@ public class MainActivityApp extends AppCompatActivity {
                         emergencyStatus=Constants.STATE_FINE;
                         PopUpClass popUpClass = new PopUpClass();
                         popUpClass.showPopupWindow(findViewById(android.R.id.content));
+                        requestRef.child(requestID).child("state").setValue(Constants.DATABASE_STATE_DRONESEEN);
                     }
                     break;
 
@@ -88,6 +112,8 @@ public class MainActivityApp extends AppCompatActivity {
         switch_button=(Switch) findViewById(R.id.switch_emergency_done);
         progess=(ProgressBar) findViewById(R.id.progress_drone);
         progress_info= (TextView) findViewById(R.id.progress_info);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         Intent intent=getIntent();
         userProfile=new UserProfile(intent.getStringExtra("USER_PROFILE_TRANSFER"));
@@ -167,14 +193,6 @@ public class MainActivityApp extends AppCompatActivity {
                             Toast.makeText(MainActivityApp.this,"Please fill in the formular", Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case Constants.STATE_EMERGENCY:
-                        button.setImageResource(R.drawable.button_default);
-                        switch_button.setVisibility(View.INVISIBLE);
-                        progess.setVisibility(View.INVISIBLE);
-                        progress_info.setText(R.string.state_fine_msg);
-                        switch_button.setChecked(false);
-                        emergencyStatus=Constants.STATE_FINE;
-                        break;
                 }
             }
         });
@@ -216,6 +234,9 @@ public class MainActivityApp extends AppCompatActivity {
                     mutableData.child("emergency_data").child("speak").setValue(!(userProfile.getmUserFormular().isUserSpeak()));
                 }
                 mutableData.child("user").child("ID").setValue(userProfile.getUserID());
+                mutableData.child("time").setValue(new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()));
+                mutableData.child("GPS").child("longitude").setValue(GPS_logitude);
+                mutableData.child("GPS").child("latitude").setValue(GPS_latitude);
                 return Transaction.success(mutableData);
             }
 

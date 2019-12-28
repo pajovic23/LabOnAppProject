@@ -7,5 +7,6 @@ public class Constants {
     final static public int STATE_PATIENT_ACKNOWLEDGED=2;
     final static public int DATABASE_STATE_NOT_SEEN=0;
     final static public int DATABASE_STATE_ACKNOWLEDGED=1;
+    final static public int DATABASE_STATE_DRONESEEN=2;
     public Constants(){}
 }
